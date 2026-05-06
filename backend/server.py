@@ -366,8 +366,9 @@ async def generate_plan(req: PlanRequest) -> PlanResponse:
     goal_timeline = _build_goal_timeline(req, metrics["monthly_savings"])
 
     try:
-        # Cap LLM call at 50s so edge gateway (60s) never times out.
-        ai = await asyncio.wait_for(_llm_generate(req, metrics), timeout=50.0)
+        # Cap LLM call at 45s — edge proxy enforces ~60s; this leaves room for
+        # FastAPI serialization + Mongo insert so the response is always flushed.
+        ai = await asyncio.wait_for(_llm_generate(req, metrics), timeout=45.0)
         if not ai.get("ai_plan_markdown"):
             ai = _fallback_plan(req, metrics)
     except asyncio.TimeoutError:

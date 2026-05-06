@@ -41,3 +41,15 @@ AI-powered financial planning web app called "FinFlow AI" with tagline "Your Sma
 - **P2**: Side-by-side compare across two model runs.
 - **P3**: Net-worth chart over time, scenario "what-if" sliders.
 - **P3**: WhatsApp share + UPI auto-debit reminders.
+
+## Code-Review Hardening (2026-01-06)
+- **Security (XSS)**: Removed every `dangerouslySetInnerHTML` from the codebase. Markdown bold (`**text**`) is now rendered with pure React via `String.split` + `<strong>` nodes (`/app/frontend/src/lib/markdown.jsx`).
+- **React hook deps**: `AppContext.jsx` now uses `useCallback` + `useMemo` for `toggleTheme`, `toggleLang`, `t`, `dict` (stable identities). `PetLoader.jsx` memoizes `steps[]` and lifts the particle config to module scope. `ProTip.jsx` split into two effects with clean dependency arrays.
+- **Stable list keys**: EMI rows and goal rows in the wizard get a stable `id` on creation; checklist + goal-timeline keys now combine value + index to remain stable across reorderings.
+- **Component decomposition**:
+  - `Wizard.jsx` (310 lines) → `Wizard.jsx` ~110 lines + `wizard/{NumInput,WizardProgress,StepPersonal,StepIncome,StepExpenses,StepAssets,StepGoals}.jsx` + `hooks/useWizardState.js`.
+  - `Dashboard.jsx` (318 lines) → `Dashboard.jsx` ~30 lines + `dashboard/{StatGrid,HealthCard,SummaryCard,GoalTimeline,ActionChecklist,PlanBody,EmailCard,DashboardActions}.jsx` + `lib/{pdf.js,markdown.jsx}`.
+- **Inline object props**: `Toaster` `toastOptions` extracted to module-level constant in `App.js`.
+- **Backend resilience**: `asyncio.wait_for(45s)` (was 50s) so the public response is always flushed within the 60s edge budget — fallback content is returned in time on slow Hindi/Claude calls.
+
+All changes verified by testing agent iteration 3 (frontend 100% pass, all 50+ data-testids resolve, XSS regression confirmed closed).
