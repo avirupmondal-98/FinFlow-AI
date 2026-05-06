@@ -9,6 +9,7 @@ Endpoints:
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import random
@@ -365,9 +366,13 @@ async def generate_plan(req: PlanRequest) -> PlanResponse:
     goal_timeline = _build_goal_timeline(req, metrics["monthly_savings"])
 
     try:
-        ai = await _llm_generate(req, metrics)
+        # Cap LLM call at 50s so edge gateway (60s) never times out.
+        ai = await asyncio.wait_for(_llm_generate(req, metrics), timeout=50.0)
         if not ai.get("ai_plan_markdown"):
             ai = _fallback_plan(req, metrics)
+    except asyncio.TimeoutError:
+        print("[LLM error] timeout — using fallback plan")
+        ai = _fallback_plan(req, metrics)
     except Exception as exc:
         print(f"[LLM error] {exc}")
         ai = _fallback_plan(req, metrics)

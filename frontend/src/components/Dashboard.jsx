@@ -221,7 +221,7 @@ export default function Dashboard({ plan, onReset }) {
           <div className="text-xs uppercase tracking-[0.25em] text-[var(--muted-fg)] font-bold">
             {t("dash.overview")}
           </div>
-          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight mt-1">
+          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight mt-1" data-testid="dashboard-title">
             Your plan, <span className="text-gradient">clear as day.</span>
           </h1>
         </div>
@@ -272,7 +272,10 @@ export default function Dashboard({ plan, onReset }) {
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2">
-            <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/50 dark:bg-white/5 border border-[var(--border)]">
+            <span
+              className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/50 dark:bg-white/5 border border-[var(--border)]"
+              data-testid="model-used-chip"
+            >
               {plan.model_used === "claude-sonnet-4-5" ? "Claude Sonnet 4.5" : "GPT-5.2"}
             </span>
             <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/50 dark:bg-white/5 border border-[var(--border)]">

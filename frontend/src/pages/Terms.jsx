@@ -5,7 +5,7 @@ import { ArrowLeft, FileText } from "lucide-react";
 export default function Terms() {
   return (
     <section className="max-w-3xl mx-auto px-6 sm:px-8 py-16">
-      <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--muted-fg)] hover:text-[var(--fg)]" data-testid="back-home">
+      <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--muted-fg)] hover:text-[var(--fg)]" data-testid="back-home-link">
         <ArrowLeft className="h-4 w-4" /> Back to home
       </Link>
       <div className="flex items-center gap-3 mt-6">
