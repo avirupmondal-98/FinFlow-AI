@@ -1,0 +1,42 @@
+{
+  "summary": "Iteration 2: Full e2e (backend + frontend) for FinFlow AI. Backend pytest 6/8 passing in single sequential run (Hindi plan & email failed due to upstream 502/edge timeouts; the email test passes when run in isolation). Frontend Playwright walked through landing -> 5-step wizard -> disclaimer -> pet loader -> dashboard (gpt-5.2) -> download -> email coming-soon toast -> reset -> /privacy-policy + /terms-and-conditions. All major dashboard widgets render. Two minor data-testid gaps found (model-used-chip, back-home-link). One occasional 502 when Claude/edge takes >60s.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/plan/generate", "issue": "Edge gateway returns 502 when LLM call exceeds ~60s (observed for Hindi+Claude run). Backend itself produces 200 + fallback when LiteLLM reports BadGateway, but the preview/edge proxy hard-times-out at 60s before the response is flushed. This will affect end users on slow LLM days."},
+      {"endpoint": "(uvicorn process)", "issue": "After pytest run completes, the backend process became unresponsive on both 127.0.0.1:8001 and the public URL until 'supervisorctl restart backend' was issued. Likely workers stuck on lingering httpx/litellm sockets after BadGateway. Suggest investigating timeouts on emergentintegrations.LlmChat / adding asyncio.wait_for around send_message."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Dashboard", "issue": "data-testid=\"model-used-chip\" not present in DOM, so model_used cannot be programmatically verified by automated tests. The plan body & score render fine after switching model to gpt-5.2.", "selector": "[data-testid=\"model-used-chip\"]", "priority": "MEDIUM"},
+      {"component": "PrivacyPolicy + Terms pages", "issue": "data-testid=\"back-home-link\" not present. Visible 'Back to home' link exists but lacks the testid promised in the spec.", "selector": "[data-testid=\"back-home-link\"]", "priority": "MEDIUM"},
+      {"component": "Dashboard", "issue": "data-testid=\"dashboard-title\" returns empty text — either missing or wrapping non-text node. Could not verify EN<->HI translation through this selector.", "selector": "[data-testid=\"dashboard-title\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/tests/test_finflow.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "Add data-testid=\"model-used-chip\" on the model badge inside Dashboard.jsx (so QA can assert model_used value).",
+    "Add data-testid=\"back-home-link\" on the Back-to-home anchor in PrivacyPolicy.jsx and Terms.jsx.",
+    "(Optional) Add data-testid=\"dashboard-title\" with translatable heading text so language toggle can be asserted.",
+    "Investigate backend hang after long-running LLM 502s — wrap LlmChat.send_message in asyncio.wait_for(timeout=55s) and fall back; this also avoids edge-gateway 502 by returning fallback content within 60s.",
+    "(Nice-to-have) On LiteLLM BadGateway, retry once before falling back so users don't always see deterministic fallback text on transient upstream errors."
+  ],
+  "critical_code_review_comments": [
+    "server.py line 397 inserts response (with serialized datetime string already) then keys plan_id as _pk — fine. But BSON _id is auto-injected by Mongo and Mongo returns ObjectId on later reads; current code excludes via not reading. OK.",
+    "_llm_generate has no per-request timeout. If LLM hangs, the request hangs until uvicorn aborts. Recommend asyncio.wait_for to keep within 55s edge budget.",
+    "App.js wraps Routes in <main key={resetKey}> which will remount the entire route tree on Reset. Acceptable but route-state will reset for /privacy-policy too.",
+    "/api/plan/email always returns 200 with success=false — frontend toast text is 'coming soon'. Correct per product spec.",
+    "Backend test file in /app/tests is fine; uvicorn watches /app/backend so no hot-reload triggered."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "75% (6/8 in single sequential run; 8/8 in split runs)", "frontend": "85% (all functional flows pass; 3 minor data-testid gaps)"},
+  "test_credentials": "n/a (no auth)",
+  "seed_data_creation": "none — payloads prefixed with TEST_ in pytest are stateless",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend supervised; if responses time out >60s, restart backend then re-test. The /api/plan/generate happy path with claude-sonnet-4-5 + EN consistently passes under 60s. Hindi run is the slowest. Frontend e2e works end-to-end with gpt-5.2 model — health score 100 was returned and dashboard widgets all rendered. Disclaimer modal, pet loader, PDF download, email coming-soon toast all functional.",
+  "rca of the issue": "1) Hindi plan 502: edge proxy has ~60s read timeout; Claude latency for hi can exceed this. Fix by capping LLM latency at <55s (asyncio.wait_for) and using fallback path early. 2) Backend hang post-tests: LiteLLM BadGateway leaves connections in an unhealthy state; restart cleared it. 3) Missing data-testid on model-used-chip / back-home-link blocks automated assertion of those elements; add the attributes."
+}

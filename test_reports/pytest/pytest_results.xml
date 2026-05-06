@@ -1,24 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="2" failures="3" skipped="0" tests="8" time="196.212" timestamp="2026-05-06T09:05:35.682433+00:00" hostname="agent-env-98b2fe49-12ad-474e-8ba8-1675e347187c"><testcase classname="backend.tests.test_finflow.TestHealth" name="test_root" time="0.164" /><testcase classname="backend.tests.test_finflow.TestTips" name="test_random_tip_en" time="0.110" /><testcase classname="backend.tests.test_finflow.TestTips" name="test_random_tip_hi" time="0.099" /><testcase classname="backend.tests.test_finflow.TestPlanGeneration" name="test_claude_structure" time="60.097"><error message="failed on setup with &quot;AssertionError: Claude plan failed: 502 The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code&quot;">backend/tests/test_finflow.py:117: in claude_plan
-    assert r.status_code == 200, f"Claude plan failed: {r.status_code} {r.text[:500]}"
-E   AssertionError: Claude plan failed: 502 The preview environment is not responding. It may be starting up.
-E     
-E   assert 502 == 200
-E    +  where 502 = &lt;Response [502]&gt;.status_code</error></testcase><testcase classname="backend.tests.test_finflow.TestPlanGeneration" name="test_claude_metric_math" time="0.000"><error message="failed on setup with &quot;AssertionError: Claude plan failed: 502 The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code&quot;">backend/tests/test_finflow.py:117: in claude_plan
-    assert r.status_code == 200, f"Claude plan failed: {r.status_code} {r.text[:500]}"
-E   AssertionError: Claude plan failed: 502 The preview environment is not responding. It may be starting up.
-E     
-E   assert 502 == 200
-E    +  where 502 = &lt;Response [502]&gt;.status_code</error></testcase><testcase classname="backend.tests.test_finflow.TestPlanGeneration" name="test_gpt_plan" time="60.182"><failure message="AssertionError: GPT plan failed: 502 The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_finflow.py:160: in test_gpt_plan
-    assert r.status_code == 200, f"GPT plan failed: {r.status_code} {r.text[:500]}"
-E   AssertionError: GPT plan failed: 502 The preview environment is not responding. It may be starting up.
-E     
-E   assert 502 == 200
-E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="backend.tests.test_finflow.TestPlanGeneration" name="test_hindi_plan" time="60.246"><failure message="AssertionError: Hindi plan failed: 502 The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_finflow.py:168: in test_hindi_plan
-    assert r.status_code == 200, f"Hindi plan failed: {r.status_code} {r.text[:500]}"
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="8" time="155.435" timestamp="2026-05-06T09:35:48.558754+00:00" hostname="agent-env-98b2fe49-12ad-474e-8ba8-1675e347187c"><testcase classname="tests.test_finflow.TestHealth" name="test_root" time="0.129" /><testcase classname="tests.test_finflow.TestTips" name="test_random_tip_en" time="0.104" /><testcase classname="tests.test_finflow.TestTips" name="test_random_tip_hi" time="0.104" /><testcase classname="tests.test_finflow.TestPlanGeneration" name="test_claude_structure" time="49.949" /><testcase classname="tests.test_finflow.TestPlanGeneration" name="test_claude_metric_math" time="0.000" /><testcase classname="tests.test_finflow.TestPlanGeneration" name="test_gpt_plan" time="29.728" /><testcase classname="tests.test_finflow.TestPlanGeneration" name="test_hindi_plan" time="60.119"><failure message="AssertionError: Hindi plan failed: 502 The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">/app/backend/tests/test_finflow.py:168: in test_hindi_plan
+    ???
 E   AssertionError: Hindi plan failed: 502 The preview environment is not responding. It may be starting up.
 E     
 E   assert 502 == 200
-E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="backend.tests.test_finflow.TestEmail" name="test_email_returns_coming_soon" time="15.117"><failure message="requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='98b2fe49-12ad-474e-8ba8-1675e347187c.preview.emergentagent.com', port=443): Read timed out. (read timeout=15)">/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:534: in _make_request
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="tests.test_finflow.TestEmail" name="test_email_returns_coming_soon" time="15.126"><failure message="requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='98b2fe49-12ad-474e-8ba8-1675e347187c.preview.emergentagent.com', port=443): Read timed out. (read timeout=15)">/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:534: in _make_request
     response = conn.getresponse()
                ^^^^^^^^^^^^^^^^^^
 /root/.venv/lib/python3.11/site-packages/urllib3/connection.py:571: in getresponse
@@ -62,8 +47,8 @@ The above exception was the direct cause of the following exception:
 E   urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='98b2fe49-12ad-474e-8ba8-1675e347187c.preview.emergentagent.com', port=443): Read timed out. (read timeout=15)
 
 During handling of the above exception, another exception occurred:
-backend/tests/test_finflow.py:180: in test_email_returns_coming_soon
-    r = requests.post(
+/app/backend/tests/test_finflow.py:180: in test_email_returns_coming_soon
+    ???
 /root/.venv/lib/python3.11/site-packages/requests/api.py:115: in post
     return request("post", url, data=data, json=json, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

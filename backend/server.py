@@ -326,24 +326,36 @@ async def _llm_generate(req: PlanRequest, metrics: dict[str, float]) -> dict[str
 def _fallback_plan(req: PlanRequest, metrics: dict[str, float]) -> dict[str, Any]:
     """Simple deterministic plan if LLM fails — ensures app stays functional."""
     is_hi = req.language == "hi"
-    summary = (
-        f"आपकी मासिक बचत लगभग ₹{metrics['monthly_savings']:,.0f} है और फाइनेंशियल स्कोर {metrics['financial_health_score']} है। अपने लक्ष्यों के लिए SIP शुरू करें।"
-        if is_hi
-        else f"Your monthly savings are about ₹{metrics['monthly_savings']:,.0f} with a financial health score of {metrics['financial_health_score']}. Start an SIP aligned with your goals."
-    )
-    plan_md = (
-        "## Overview\nBalanced approach focused on savings discipline and goal-linked investing.\n\n"
-        "## Budget Optimization\nReview subscriptions; cap discretionary spend at 30%.\n\n"
-        "## Investment Strategy\n- SIP in diversified equity mutual funds\n- PPF for long-term tax-free growth\n- Emergency FD for 6 months of expenses"
-    )
-    checklist = [
-        "✅ Automate monthly SIP on salary day",
-        "💰 Build emergency fund = 6× monthly expenses",
-        "📉 Reduce high-interest EMIs first",
-        "📈 Review portfolio quarterly",
-        "🛡️ Buy term life cover = 10× annual income",
-        "🩺 Keep a separate health insurance policy",
-    ]
+    if is_hi:
+        summary = f"आपकी मासिक बचत लगभग ₹{metrics['monthly_savings']:,.0f} है और फाइनेंशियल स्कोर {metrics['financial_health_score']} है। अपने लक्ष्यों के लिए SIP शुरू करें।"
+        plan_md = (
+            "## अवलोकन\nबचत अनुशासन और लक्ष्य-आधारित निवेश पर केंद्रित संतुलित दृष्टिकोण।\n\n"
+            "## बजट सुधार\nसब्सक्रिप्शन देखें; विवेकाधीन खर्च 30% पर सीमित करें।\n\n"
+            "## निवेश रणनीति\n- विविध इक्विटी म्यूचुअल फंड में SIP\n- दीर्घकालिक टैक्स-मुक्त वृद्धि के लिए PPF\n- 6 महीने के खर्च के लिए इमरजेंसी FD"
+        )
+        checklist = [
+            "✅ सैलरी दिन पर SIP ऑटोमेट करें",
+            "💰 6× मासिक खर्च का इमरजेंसी फंड बनाएँ",
+            "📉 पहले महंगे EMI चुकाएँ",
+            "📈 हर तिमाही पोर्टफोलियो रिव्यू करें",
+            "🛡️ टर्म इंश्योरेंस = 10× वार्षिक आय लें",
+            "🩺 अलग हेल्थ इंश्योरेंस पॉलिसी रखें",
+        ]
+    else:
+        summary = f"Your monthly savings are about ₹{metrics['monthly_savings']:,.0f} with a financial health score of {metrics['financial_health_score']}. Start an SIP aligned with your goals."
+        plan_md = (
+            "## Overview\nBalanced approach focused on savings discipline and goal-linked investing.\n\n"
+            "## Budget Optimization\nReview subscriptions; cap discretionary spend at 30%.\n\n"
+            "## Investment Strategy\n- SIP in diversified equity mutual funds\n- PPF for long-term tax-free growth\n- Emergency FD for 6 months of expenses"
+        )
+        checklist = [
+            "✅ Automate monthly SIP on salary day",
+            "💰 Build emergency fund = 6× monthly expenses",
+            "📉 Reduce high-interest EMIs first",
+            "📈 Review portfolio quarterly",
+            "🛡️ Buy term life cover = 10× annual income",
+            "🩺 Keep a separate health insurance policy",
+        ]
     return {"ai_summary": summary, "ai_plan_markdown": plan_md, "monthly_action_checklist": checklist}
 
 
