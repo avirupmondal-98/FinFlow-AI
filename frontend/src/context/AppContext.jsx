@@ -1,51 +1,67 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { DICT, t as translate } from "../lib/i18n";
 
 const AppCtx = createContext(null);
 
+const THEME_KEY = "finflow-theme";
+const LANG_KEY = "finflow-lang";
+const MODEL_KEY = "finflow-model";
+
+function readStored(key, fallback) {
+  if (typeof window === "undefined") return fallback;
+  try {
+    return window.localStorage.getItem(key) || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStored(key, value) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    /* ignore quota / privacy-mode failures */
+  }
+}
+
 export function AppProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window === "undefined") return "light";
-    return localStorage.getItem("finflow-theme") || "light";
-  });
-  const [lang, setLang] = useState(() => {
-    if (typeof window === "undefined") return "en";
-    return localStorage.getItem("finflow-lang") || "en";
-  });
-  const [model, setModel] = useState(() => {
-    if (typeof window === "undefined") return "claude-sonnet-4-5";
-    return localStorage.getItem("finflow-model") || "claude-sonnet-4-5";
-  });
+  const [theme, setTheme] = useState(() => readStored(THEME_KEY, "light"));
+  const [lang, setLang] = useState(() => readStored(LANG_KEY, "en"));
+  const [model, setModel] = useState(() => readStored(MODEL_KEY, "claude-sonnet-4-5"));
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("finflow-theme", theme);
+    writeStored(THEME_KEY, theme);
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem("finflow-lang", lang);
+    writeStored(LANG_KEY, lang);
     document.documentElement.lang = lang;
   }, [lang]);
 
   useEffect(() => {
-    localStorage.setItem("finflow-model", model);
+    writeStored(MODEL_KEY, model);
   }, [model]);
 
-  const value = useMemo(
-    () => ({
-      theme,
-      setTheme,
-      toggleTheme: () => setTheme((t) => (t === "dark" ? "light" : "dark")),
-      lang,
-      setLang,
-      toggleLang: () => setLang((l) => (l === "en" ? "hi" : "en")),
-      model,
-      setModel,
-      t: (path) => translate(lang, path),
-      dict: DICT[lang] || DICT.en,
-    }),
-    [theme, lang, model]
+  const toggleTheme = useCallback(
+    () => setTheme((prev) => (prev === "dark" ? "light" : "dark")),
+    []
   );
+  const toggleLang = useCallback(
+    () => setLang((prev) => (prev === "en" ? "hi" : "en")),
+    []
+  );
+
+  // Translator depends only on `lang` — the dictionary is a stable module import.
+  const t = useCallback((path) => translate(lang, path), [lang]);
+  const dict = useMemo(() => DICT[lang] || DICT.en, [lang]);
+
+  const value = useMemo(
+    () => ({ theme, setTheme, toggleTheme, lang, setLang, toggleLang, model, setModel, t, dict }),
+    [theme, lang, model, toggleTheme, toggleLang, t, dict]
+  );
+
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }
 

@@ -1,0 +1,42 @@
+{
+  "summary": "Iteration 3 regression after Wizard/Dashboard refactor + safe markdown rendering. Backend pytest 6/8 in single sequential run (Hindi plan and email failed with 502 / read timeout — same edge-gateway flakiness as iteration 2). When run in isolation: email passes immediately, Hindi still flaky (502 from edge after ~60s; backend itself returns 200 with valid Devanagari content via localhost). Frontend full e2e walked Landing → Wizard (5 steps) → Disclaimer → PetLoader → Dashboard (gpt-5.2) → Download → Email coming-soon → Reset → /privacy-policy → /terms-and-conditions. All 16 dashboard testids and all wizard testids resolve. model-used-chip correctly shows 'GPT-5.2'. plan-body renders 63 <strong> tags from **bold** with NO <script> in DOM (XSS regression passes). EN→HI toggle visibly mutates every dashboard label (verified via screenshot showing फिनफ्लो एआई / कुल मासिक आय / लक्ष्य टाइमलाइन / मासिक एक्शन चेकलिस्ट / सारांश / प्रो टिप). Theme toggle adds/removes 'dark' on <html>. All three iteration-2 data-testid gaps (model-used-chip, back-home-link, dashboard-title) are now closed.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/plan/generate (language=hi, model=claude-sonnet-4-5)", "issue": "Edge ingress returns 502 'preview environment is not responding' at ~60s for the Hindi+Claude payload. The backend itself completes successfully and returns valid Hindi (Devanagari) content when called via http://localhost:8001 — confirmed during this iteration. asyncio.wait_for(50s) is in place but Claude/Hindi end-to-end occasionally still exceeds the ~60s edge read timeout. Same behaviour as iteration 2."},
+      {"endpoint": "(uvicorn process)", "issue": "Right after the long 502, the next public-URL call (test_email_returns_coming_soon) read-timed-out at 15s, then recovered ~10s later. Internal localhost:8001 was always healthy. Suggests transient edge backpressure when the previous LLM request held a connection open."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/tests/test_finflow.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "(Carry-over from iter 2, still applicable) Reduce Claude/Hindi end-to-end LLM time below ~55s edge budget — e.g. tighten asyncio.wait_for to 45s and emit fallback earlier so the public response is flushed within 60s.",
+    "(Optional) Add 1 retry on LiteLLM BadGateway before falling back so users don't see deterministic fallback text on transient upstream errors."
+  ],
+  "critical_code_review_comments": [
+    "Refactor is clean: Dashboard.jsx is now ~30 lines composing 8 subcomponents under /components/dashboard, Wizard.jsx is ~110 lines composing 5 step components + WizardProgress + useWizardState hook. Reduced cyclomatic complexity as advertised.",
+    "/app/frontend/src/lib/markdown.jsx uses pure React rendering — text is split on /\\*\\*(.+?)\\*\\*/g and rendered as <strong> via React.Fragment/strong nodes, never dangerouslySetInnerHTML. XSS surface for LLM-supplied markdown is now properly closed.",
+    "EmailCard cleanly resets sending state in finally; SummaryCard/HealthCard/StatGrid each have a single responsibility. AppContext uses useCallback/useMemo so toggleTheme/toggleLanguage/t functions have stable identity — fixes the previous useEffect dep warnings.",
+    "PetLoader memoizes steps[] and lifts particles config to module scope — eliminates re-render churn during the long LLM wait.",
+    "Backend server.py line 370 wraps _llm_generate in asyncio.wait_for(50.0). Good. To eliminate 502s entirely, drop to 45.0 since FastAPI/uvicorn serialization + Mongo insert + network adds ~3-5s on top.",
+    "PDF download uses jsPDF and strips ** from markdown before splitTextToSize — works for ASCII but won't render Devanagari glyphs (helvetica has no Indic glyphs). User who generates a Hindi plan and clicks Download will get an empty/garbled PDF body. Not a regression vs iter 2, but worth flagging."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "75% (6/8 in single sequential run; 7/8 with email retry; Hindi plan blocked by edge-gateway 60s timeout, not a backend bug)",
+    "frontend": "100% (all required flows + all 50+ data-testids verified; no UI bugs found)"
+  },
+  "test_credentials": "n/a (no auth)",
+  "seed_data_creation": "none — payloads prefixed with TEST_ in pytest are stateless; MongoDB plan document is created per /api/plan/generate call but contains only test data",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Refactor verified — behavior identical to iteration 2 with all three previously-missing data-testids now present. Hindi+Claude plan generation remains the only flaky path; if re-running, use claude-sonnet-4-5+EN or gpt-5.2 to avoid the 60s edge read timeout, OR call backend directly via http://localhost:8001 which is consistently fast. Frontend e2e fully passes when goal-row-0 default values are kept (don't add an empty second goal — generate-plan-btn requires every goal row to have target>0 and a priority).",
+  "rca of the issue": "Hindi plan 502: identical RCA to iteration 2 — edge proxy enforces a ~60s read timeout, while Claude+Hindi end-to-end occasionally exceeds 55s. Backend is healthy throughout (verified via localhost call which returned a valid Hindi plan in this iteration). Mitigation: tighten asyncio.wait_for from 50s to ~45s so the fallback path returns within edge budget. Email read-timeout right after Hindi 502 was transient backpressure from the still-active LLM connection — the test passes immediately on retry."
+}

@@ -9,6 +9,12 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Terms from "./pages/Terms";
 import "./App.css";
 
+// Stable refs — created once at module load to avoid re-renders from new
+// object identities on every render.
+const TOASTER_TOAST_OPTIONS = {
+  style: { fontFamily: "Satoshi, system-ui, sans-serif" },
+};
+
 function Shell() {
   const [resetKey, setResetKey] = useState(0);
   return (
@@ -32,7 +38,7 @@ export default function App() {
     <AppProvider>
       <BrowserRouter>
         <Shell />
-        <Toaster richColors position="top-right" toastOptions={{ style: { fontFamily: "Satoshi, system-ui, sans-serif" } }} />
+        <Toaster richColors position="top-right" toastOptions={TOASTER_TOAST_OPTIONS} />
       </BrowserRouter>
     </AppProvider>
   );

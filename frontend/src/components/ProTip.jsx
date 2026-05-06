@@ -9,27 +9,32 @@ export default function ProTip({ nonce = 0, initialTip = "" }) {
   const [visible, setVisible] = useState(true);
   const [anim, setAnim] = useState(0);
 
+  // Sync incoming tip whenever a brand-new plan provides one.
   useEffect(() => {
-    let cancelled = false;
-    if (nonce > 0) {
-      randomTip(lang)
-        .then((res) => {
-          if (!cancelled) {
-            setTip(res.tip);
-            setAnim((a) => a + 1);
-            setVisible(true);
-          }
-        })
-        .catch(() => {});
+    if (initialTip) {
+      setTip(initialTip);
+      setVisible(true);
     }
+  }, [initialTip]);
+
+  // Fetch a fresh tip on each plan-generation cycle (skip the initial mount).
+  useEffect(() => {
+    if (nonce <= 0) return undefined;
+    let cancelled = false;
+    randomTip(lang)
+      .then((res) => {
+        if (cancelled) return;
+        setTip(res.tip);
+        setAnim((a) => a + 1);
+        setVisible(true);
+      })
+      .catch(() => {
+        /* swallow — keep last shown tip */
+      });
     return () => {
       cancelled = true;
     };
   }, [nonce, lang]);
-
-  useEffect(() => {
-    setTip(initialTip);
-  }, [initialTip]);
 
   if (!visible || !tip) return null;
 

@@ -35,12 +35,12 @@ export default function Landing({ onStart }) {
 
           <div id="features" className="mt-14 grid sm:grid-cols-3 gap-4">
             {[
-              { icon: <TrendingUp className="h-5 w-5" />, k: "features.one" },
-              { icon: <Target className="h-5 w-5" />, k: "features.two" },
-              { icon: <Sparkles className="h-5 w-5" />, k: "features.three" },
+              { id: "feat-trending", icon: <TrendingUp className="h-5 w-5" />, k: "features.one" },
+              { id: "feat-target", icon: <Target className="h-5 w-5" />, k: "features.two" },
+              { id: "feat-sparkles", icon: <Sparkles className="h-5 w-5" />, k: "features.three" },
             ].map((f, i) => (
               <div
-                key={i}
+                key={f.id}
                 className="glass rounded-2xl p-5 animate-fade-up"
                 style={{ animationDelay: `${120 * (i + 1)}ms` }}
               >
@@ -99,11 +99,11 @@ export default function Landing({ onStart }) {
 
             <div className="grid grid-cols-3 gap-3 mt-4">
               {[
-                { l: "Income", v: "₹1.2L" },
-                { l: "Expense", v: "₹74K" },
-                { l: "Save", v: "₹46K" },
-              ].map((s, i) => (
-                <div key={i} className="rounded-2xl bg-white/70 dark:bg-white/5 border border-[var(--border)] p-3">
+                { id: "stat-income", l: "Income", v: "₹1.2L" },
+                { id: "stat-expense", l: "Expense", v: "₹74K" },
+                { id: "stat-save", l: "Save", v: "₹46K" },
+              ].map((s) => (
+                <div key={s.id} className="rounded-2xl bg-white/70 dark:bg-white/5 border border-[var(--border)] p-3">
                   <div className="text-[10px] uppercase tracking-widest text-[var(--muted-fg)]">{s.l}</div>
                   <div className="font-display font-extrabold text-lg mt-1">{s.v}</div>
                 </div>
