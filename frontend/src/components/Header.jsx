@@ -35,7 +35,6 @@ export default function Header({ onReset }) {
             data-testid="model-select"
             title={t("modelLabel")}
           >
-            <option value="claude-sonnet-4-5">Claude Sonnet 4.5</option>
             <option value="gpt-5.2">GPT-5.2</option>
           </select>
 

@@ -17,7 +17,7 @@ export default function SummaryCard({ plan }) {
           className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/50 dark:bg-white/5 border border-[var(--border)]"
           data-testid="model-used-chip"
         >
-          {plan.model_used === "claude-sonnet-4-5" ? "Claude Sonnet 4.5" : "GPT-5.2"}
+          GPT-5.2
         </span>
         <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/50 dark:bg-white/5 border border-[var(--border)]">
           {plan.language === "hi" ? "हिन्दी" : "English"}

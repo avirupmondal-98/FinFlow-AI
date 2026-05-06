@@ -21,7 +21,7 @@ function StatCard({ icon, label, value, accent }) {
 export default function StatGrid({ plan }) {
   const { t } = useApp();
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="pdf-stat-grid">
       <StatCard
         icon={<TrendingUp className="h-5 w-5" />}
         label={t("dash.income")}

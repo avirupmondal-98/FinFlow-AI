@@ -6,7 +6,7 @@ import { useApp } from "../../context/AppContext";
 export default function HealthCard({ plan }) {
   const { t } = useApp();
   return (
-    <div className="glass rounded-3xl p-6 flex flex-col items-center text-center lg:col-span-1 relative overflow-hidden">
+    <div className="glass rounded-3xl p-6 flex flex-col items-center text-center lg:col-span-1 relative overflow-hidden" id="pdf-health-card">
       <div className="absolute -top-20 -right-20 h-48 w-48 rounded-full bg-teal-400/20 blur-3xl" />
       <div className="flex items-center gap-3 w-full">
         <Dog size={64} />

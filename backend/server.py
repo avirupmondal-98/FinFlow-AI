@@ -99,7 +99,7 @@ class PlanRequest(BaseModel):
     assets: AssetsLiabilities
     goals: List[Goal] = Field(default_factory=list)
     language: Literal["en", "hi"] = "en"
-    model_choice: Literal["claude-sonnet-4-5", "gpt-5.2"] = "claude-sonnet-4-5"
+    model_choice: Literal["gpt-5.2"] = "gpt-5.2"
 
 
 class GoalTimelineItem(BaseModel):
@@ -285,11 +285,7 @@ async def _llm_generate(req: PlanRequest, metrics: dict[str, float]) -> dict[str
         "All amounts in INR (₹). "
         f"Respond in {'Hindi' if req.language == 'hi' else 'English'}."
     )
-    provider, model = (
-        ("anthropic", "claude-sonnet-4-5-20250929")
-        if req.model_choice == "claude-sonnet-4-5"
-        else ("openai", "gpt-5.2")
-    )
+    provider, model = ("openai", "gpt-5.2")
 
     payload = {
         "personal": req.personal.model_dump(),

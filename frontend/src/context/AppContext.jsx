@@ -28,7 +28,7 @@ function writeStored(key, value) {
 export function AppProvider({ children }) {
   const [theme, setTheme] = useState(() => readStored(THEME_KEY, "light"));
   const [lang, setLang] = useState(() => readStored(LANG_KEY, "en"));
-  const [model, setModel] = useState(() => readStored(MODEL_KEY, "claude-sonnet-4-5"));
+  const [model, setModel] = useState(() => readStored(MODEL_KEY, "gpt-5.2"));
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");

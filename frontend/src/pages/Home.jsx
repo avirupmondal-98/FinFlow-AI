@@ -10,7 +10,7 @@ import { generatePlan } from "../lib/api";
 import { useApp } from "../context/AppContext";
 
 export default function Home() {
-  const { lang, model } = useApp();
+  const { lang } = useApp();
   const [phase, setPhase] = useState("landing"); // landing | wizard | loading | dashboard
   const [pendingData, setPendingData] = useState(null);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
@@ -40,7 +40,7 @@ export default function Home() {
     const payload = {
       ...pendingData,
       language: lang,
-      model_choice: model,
+      model_choice: "gpt-5.2",
     };
 
     const started = Date.now();

@@ -53,3 +53,12 @@ AI-powered financial planning web app called "FinFlow AI" with tagline "Your Sma
 - **Backend resilience**: `asyncio.wait_for(45s)` (was 50s) so the public response is always flushed within the 60s edge budget — fallback content is returned in time on slow Hindi/Claude calls.
 
 All changes verified by testing agent iteration 3 (frontend 100% pass, all 50+ data-testids resolve, XSS regression confirmed closed).
+
+## Iteration 4 — Single-Engine + Premium PDF (2026-01-06)
+- **Removed Claude**, GPT-5.2 only. Backend `model_choice` is now `Literal["gpt-5.2"]` (rejects anything else with 422). Header dropdown shows only `GPT-5.2`. Default in `AppContext` flipped to `gpt-5.2`. Dashboard `model-used-chip` always reads `GPT-5.2`.
+- **Premium colorful PDF** (`/app/frontend/src/lib/pdf.js` rewritten):
+  - Captures live dashboard sections via `html2canvas` (`#pdf-stat-grid`, `#pdf-health-card`, `#pdf-goal-timeline`) and embeds them as JPEG images.
+  - Brand-gradient header band (blue → teal), colored snapshot cards (per-metric accent dot), embedded "Live Dashboard" screenshot, large Health Score block (with native fallback ring if capture fails), boxed AI Summary, gradient Pro Tip card with pull-quote, Goal Timeline screenshot OR colored table fallback (with on-track/needs-push pills), Monthly Action Checklist with teal bullets, Detailed Plan (heading hierarchy preserved), italicized disclaimer, repeating brand footer with page numbers.
+  - 4 pages, ~210 KB. Verified via AI document analyzer: "colorful, branded, and readable".
+- Added export-loading state to `download-plan-btn` (`Preparing PDF…` with spinner).
+- `html2canvas` added to dependencies via `yarn add`.

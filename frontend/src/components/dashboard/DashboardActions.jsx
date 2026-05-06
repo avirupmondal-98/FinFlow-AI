@@ -1,19 +1,24 @@
-import React from "react";
-import { Download, RotateCcw } from "lucide-react";
+import React, { useState } from "react";
+import { Download, RotateCcw, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { exportPlanPdf } from "../../lib/pdf";
 import { useApp } from "../../context/AppContext";
 
 export default function DashboardActions({ plan, onReset }) {
   const { t } = useApp();
+  const [exporting, setExporting] = useState(false);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    if (exporting) return;
+    setExporting(true);
     try {
-      exportPlanPdf(plan);
+      await exportPlanPdf(plan);
       toast.success(t("dash.downloadDone"));
     } catch (e) {
       console.error(e);
       toast.error("Download failed");
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -33,11 +38,16 @@ export default function DashboardActions({ plan, onReset }) {
       <div className="flex flex-wrap gap-2" data-testid="dashboard-actions">
         <button
           onClick={handleDownload}
-          className="btn-primary inline-flex items-center gap-2"
+          disabled={exporting}
+          className="btn-primary inline-flex items-center gap-2 disabled:opacity-70"
           data-testid="download-plan-btn"
         >
-          <Download className="h-4 w-4" />
-          {t("actions.download")}
+          {exporting ? (
+            <Loader2 className="h-4 w-4 animate-spin-slow" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
+          {exporting ? "Preparing PDF…" : t("actions.download")}
         </button>
         <button
           onClick={onReset}
