@@ -1,0 +1,140 @@
+{
+  "project_name": "FinFlow AI",
+  "tagline": "Your Smart Partner in Financial Growth",
+  "theme_and_archetype": {
+    "domain": "Finance, Personal Banking, Planning",
+    "selected_theme": "Hybrid (Light/Dark mode toggle supported), defaulting to Light for trust, but heavily stylized in Dark for the 'Premium Fintech' feel.",
+    "archetype": "Archetype 1 (Organic & Earthy) blended with a refined Archetype 7 (Electric/Neon) via Blue/Teal glassmorphism per user request.",
+    "emotional_tone": "Professional, premium, yet highly approachable, trusting, and slightly playful."
+  },
+  "typography": {
+    "primary_heading_font": "Cabinet Grotesk",
+    "secondary_body_font": "Satoshi",
+    "hierarchy": {
+      "h1_hero": "text-5xl sm:text-6xl font-black tracking-tighter leading-none",
+      "h2_section": "text-3xl sm:text-4xl font-bold tracking-tight",
+      "h3_card": "text-xl sm:text-2xl font-bold tracking-tight",
+      "body_large": "text-lg text-muted-foreground leading-relaxed",
+      "body_base": "text-base text-foreground",
+      "labels": "text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground"
+    },
+    "rules": "Never use Inter or Roboto. Emphasize contrast: Heavy/Black weight for numbers and key headings, Regular/Medium for body."
+  },
+  "color_system": {
+    "brand_gradient": "bg-gradient-to-br from-blue-600 via-teal-500 to-emerald-400",
+    "light_mode": {
+      "background": "#F8FAFC",
+      "foreground": "#0F172A",
+      "surface": "#FFFFFF",
+      "border": "rgba(15, 23, 42, 0.08)",
+      "muted": "#F1F5F9",
+      "muted_foreground": "#64748B",
+      "glass_bg": "rgba(255, 255, 255, 0.7)",
+      "glass_border": "rgba(255, 255, 255, 0.4)"
+    },
+    "dark_mode": {
+      "background": "#0B0F19",
+      "foreground": "#F8FAFC",
+      "surface": "#131C2D",
+      "border": "rgba(255, 255, 255, 0.08)",
+      "muted": "#1E293B",
+      "muted_foreground": "#94A3B8",
+      "glass_bg": "rgba(19, 28, 45, 0.6)",
+      "glass_border": "rgba(255, 255, 255, 0.1)"
+    },
+    "status": {
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "error": "#EF4444",
+      "info": "#3B82F6"
+    }
+  },
+  "spacing_and_radius": {
+    "spacing_scale": "p-4, p-6, p-8, p-12, p-16, p-24",
+    "card_padding": "p-6 sm:p-8",
+    "section_spacing": "py-20 sm:py-32",
+    "border_radius": {
+      "base": "rounded-2xl",
+      "large": "rounded-3xl",
+      "full": "rounded-full"
+    }
+  },
+  "surface_strategies": {
+    "glassmorphism_card": {
+      "classes": "backdrop-blur-xl bg-white/70 dark:bg-[#131C2D]/60 border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)] rounded-3xl",
+      "usage": "Dashboard widgets, Pro Tip card, Wizard form container"
+    },
+    "solid_surface": {
+      "classes": "bg-white dark:bg-[#131C2D] border border-slate-200 dark:border-slate-800 rounded-2xl",
+      "usage": "Secondary data cards, list items, inputs"
+    }
+  },
+  "animation_specs": {
+    "dog_pet_assistant": {
+      "type": "Pure SVG/CSS Keyframes",
+      "animations": {
+        "tail_wag": "@keyframes wag { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(20deg); } }",
+        "blink": "@keyframes blink { 0%, 96%, 98% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }",
+        "bounce": "@keyframes bounce-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }"
+      },
+      "usage": "Loading overlay during AI plan generation; small avatar in dashboard corner."
+    },
+    "pro_tip_shimmer": {
+      "classes": "relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent",
+      "entrance": "animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-forwards"
+    },
+    "page_transitions": "framer-motion standard initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}"
+  },
+  "layout_and_grids": {
+    "landing_hero": "grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]. Left: huge typography and primary CTA. Right: Floating glassmorphic app mockup.",
+    "form_wizard": "Max-width sm (24rem) or md (28rem) container centered in viewport. 5-step progress bar above. Soft glassmorphism wrapper. Smooth height transitions.",
+    "dashboard": "Bento Grid Mode B (Control Room). grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6. Hero metric (Health Score) spanning 2 cols. Side column for action checklist. Pro Tip card floating bottom right (fixed or sticky).",
+    "legal_pages": "Max-width prose (65ch) centered, heavy typography hierarchy, generous line-height.",
+    "footer": "Generous padding (py-24), dark background even in light mode for contrast, massive brand logo text, organized grid for links."
+  },
+  "component_specs": {
+    "buttons": {
+      "primary": "bg-gradient-to-r from-blue-600 to-teal-500 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all rounded-full font-bold px-8 py-4",
+      "secondary": "bg-white/10 backdrop-blur-md border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 rounded-full px-8 py-4"
+    },
+    "inputs": "shadcn highly customized: rounded-xl border-slate-200 focus:ring-2 focus:ring-teal-500/50 bg-white/50 backdrop-blur-sm dark:bg-black/20",
+    "health_score_ring": "SVG donut chart. Uses stroke-dasharray. Color maps dynamically to score (Red < 50, Yellow 50-70, Teal/Green > 70).",
+    "language_toggle": "Minimal pill toggle (EN | HI), standard shadcn Tabs or Switch variant.",
+    "dark_light_toggle": "Icon button (Sun/Moon) in header, uses next-themes.",
+    "testing_attributes": [
+      "data-testid='wizard-next-btn'",
+      "data-testid='wizard-step-indicator'",
+      "data-testid='dashboard-health-score'",
+      "data-testid='pro-tip-card'",
+      "data-testid='language-toggle-btn'",
+      "data-testid='theme-toggle-btn'",
+      "data-testid='export-plan-btn'"
+    ]
+  },
+  "media_assets": {
+    "hero_background": {
+      "url": "https://images.unsplash.com/photo-1777884229192-3c1509f49428?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjh8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGJsdWUlMjB0ZWFsJTIwZ2xvd2luZyUyMGdsYXNzJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NzgwNTcwMzN8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Abstract teal and gray swirling patterns",
+      "usage": "Use as a full-screen or section background with very low opacity (e.g., 10-20%) or heavy blur to enhance the glassmorphism feel."
+    },
+    "landing_mockup_1": {
+      "url": "https://images.unsplash.com/photo-1642142784847-83b9b8a22910?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBtaW5pbWFsaXN0JTIwc21hcnRwaG9uZSUyMGZpbmFuY2UlMjBhcHB8ZW58MHx8fHwxNzc4MDU3MDMzfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Modern minimalist smartphone finance app",
+      "usage": "Hero section device mockup or bento grid visual."
+    },
+    "landing_lifestyle": {
+      "url": "https://images.unsplash.com/photo-1758274252266-e8b2118cf147?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwxfHxzbWlsaW5nJTIwcGVyc29uJTIwcGhvbmUlMjBjYWZlfGVufDB8fHx8MTc3ODA1NzAzM3ww&ixlib=rb-4.1.0&q=85",
+      "alt": "Young woman smiling using app",
+      "usage": "Social proof / testimonial section."
+    }
+  },
+  "instructions_to_main_agent": [
+    "Files must use standard .js/.jsx extensions. Do not use TypeScript.",
+    "Use pure HTML/Tailwind for marketing layouts. Use shadcn/ui for complex interactive logic like the wizard, select dropdowns, and dialogs.",
+    "Implement the animated dog purely via SVG elements and CSS keyframes inline or in global CSS. Avoid heavy external animation libraries for the dog.",
+    "Ensure dark/light mode switches cleanly via next-themes (or similar context).",
+    "Never center text by default on marketing pages—rely on asymmetry and breathing room (Tailwind bento grid scales).",
+    "Ensure the Pro Tip card stands out using the provided shimmer animation classes and z-index.",
+    "Currency must be formatted in INR (₹) using Intl.NumberFormat('en-IN')."
+  ]
+}
